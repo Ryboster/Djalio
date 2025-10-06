@@ -1,0 +1,699 @@
+html {
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+*, *::before, *::after {
+    box-sizing: inherit;
+}
+
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #0d1117;
+    color: #e6edf3;
+}
+
+
+.background {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    background: linear-gradient(135deg, #21262d 0%, #161b22 100%);
+}
+
+.pageContent {
+    background-color: #0d1117;
+    z-index: 1;
+    width: 66%;
+    height: calc(100% - 70px);
+    overflow-y: auto;
+    padding: 20px;
+    box-sizing: border-box;
+    border-radius: 20px 0 0 0;
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
+    border-left: 1px solid #30363d;
+}
+
+.pageContentList {
+    display: flex;
+    flex-direction: column;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* All form overlays */
+.addActivityFormOverlay, 
+.removeActivityFormOverlay,
+.addEntryFormOverlay, 
+.removeEntryFormOverlay, 
+.editEntryFormOverlay,
+.addCategoryFormOverlay,
+.MoodsView,
+.addMoodFormOverlay,
+.removeMoodFormOverlay,
+.editMoodFormOverlay,
+.editActivityFormOverlay,
+.editCategoryFormOverlay,
+.removeCategoryFormOverlay {
+    background-color: rgba(13, 17, 23, 0.8);
+    display: none;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    left: 0;
+    backdrop-filter: blur(5px);
+}
+
+.addMoodFormOverlay,
+.removeMoodFormOverlay,
+.editMoodFormOverlay,
+.editCategoryFormOverlay,
+.removeCategoryFormOverlay,
+.editActivityFormOverlay
+{
+    z-index: 6;
+}
+
+.navbar,
+.filler
+{
+    width:18%;
+    overflow: scroll;
+    height: calc(100% - 70px);
+}
+
+/* Small form styles (activity, category, mood forms) */
+.addActivityFormOverlay form, 
+.removeActivityFormOverlay form,
+.MoodsViewBackground,
+.addCategoryFormOverlay form,
+.editActivityFormOverlay form,
+.addMoodFormOverlay form,
+.editMoodFormOverlay form,
+.removeMoodFormOverlay form,
+.editCategoryFormOverlay form,
+.removeCategoryFormOverlay form {
+    background-color: #161b22;
+    border: 1px solid #30363d;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 16px 32px rgba(1, 4, 9, 0.85);
+    min-width: 50%;
+    max-width: 75%;
+    color: #e6edf3;
+}
+
+/* Large form styles (entry forms) */
+.addEntryFormOverlay form, 
+.editEntryFormOverlay form,
+.removeEntryFormOverlay form {
+    padding: 30px;
+    width: 60%;
+    max-width: 900px;
+    height: 85%;
+    background-color: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 12px;
+    box-shadow: 0 16px 32px rgba(1, 4, 9, 0.85);
+    overflow-y: auto;
+    box-sizing: border-box;
+    color: #e6edf3;
+}
+
+/* Form input styles */
+.addEntryFormOverlay input,
+.editCategoryFormOverlay input,
+.addEntryFormOverlay select,
+.addEntryFormOverlay textarea,
+.editEntryFormOverlay input,
+.editEntryFormOverlay select,
+.editEntryFormOverlay textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0 15px 0;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 14px;
+    background-color: #0d1117;
+    color: #e6edf3;
+    transition: border-color 0.3s ease;
+}
+
+.addEntryFormOverlay input:focus,
+.addEntryFormOverlay select:focus,
+.addEntryFormOverlay textarea:focus,
+.editEntryFormOverlay input:focus,
+.editEntryFormOverlay select:focus,
+.editEntryFormOverlay textarea:focus {
+    outline: none;
+    border-color: #58a6ff;
+    box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.1);
+}
+
+.addEntryFormOverlay label,
+.editEntryFormOverlay label {
+    display: block;
+    font-weight: 600;
+    margin-top: 15px;
+    color: #f0f6fc;
+    font-size: 14px;
+}
+
+/* Small form input styles */
+.addActivityFormOverlay input,
+.removeActivityFormOverlay input,
+.addCategoryFormOverlay input,
+.editActivityFormOverlay input,
+.addMoodFormOverlay input,
+.editMoodFormOverlay input,
+.removeMoodFormOverlay input,
+.removeCategoryFormOverlay input,
+.addActivityFormOverlay select,
+.removeMoodFormOverlay select,
+.addMoodFormOverlay select,
+.editMoodFormOverlay select {
+    padding: 10px;
+    margin: 5px;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    flex: 1;
+    font-size: 14px;
+    background-color: #0d1117;
+    color: #e6edf3;
+    transition: border-color 0.3s ease;
+}
+
+.addActivityFormOverlay input:focus,
+.removeActivityFormOverlay input:focus,
+.addCategoryFormOverlay input:focus,
+.editActivityFormOverlay input:focus,
+.removeMoodFormOverlay input:focus,
+.addMoodFormOverlay input:focus,
+.editMoodFormOverlay input:focus,
+.removeCategoryFormOverlay input:focus {
+    outline: none;
+    border-color: #58a6ff;
+}
+
+/* Button styles */
+button {
+    background: linear-gradient(135deg, #238636 0%, #2ea043 100%);
+    color: #ffffff;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    margin: 5px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    background: linear-gradient(135deg, #2ea043 0%, #238636 100%);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+button[type="submit"] {
+    background: linear-gradient(135deg, #238636 0%, #2ea043 100%);
+    margin-top: 20px;
+    padding: 14px 28px;
+}
+
+button[type="submit"]:hover {
+    background: linear-gradient(135deg, #2ea043 0%, #238636 100%);
+}
+
+/* Post container styles */
+.postContainer {
+    background-color: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: visible !important;
+}
+
+.postContainer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(135deg, #58a6ff 0%, #79c0ff 100%);
+    border-radius: 12px 12px 0 0;
+}
+
+.postContainer:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+    transform: translateY(-3px);
+    border-color: #58a6ff;
+    background-color: #21262d;
+}
+
+.postContainer[selected="true"] {
+    background-color: rgba(88, 166, 255, 0.1);
+    border-color: #58a6ff;
+    box-shadow: 0 8px 25px rgba(88, 166, 255, 0.2);
+}
+
+.dateContainer {
+    font-size: 13px;
+    color: #7d8590;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.moodContainer {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: #f0f6fc;
+}
+
+.moodContent {
+    display: inline-block;
+    padding: 6px 12px;
+    margin: 3px;
+    color: #0d1117;
+    border-radius: 20px;
+    font-size: 24px;
+    font-weight: 500;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.activitiesContainer {
+    margin: 15px 0;
+}
+
+.contentContainer {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #c9d1d9;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    max-height: none !important;
+    height: auto !important;
+    position: relative;
+    word-wrap: break-word;
+}
+
+.cke_notification_warning {
+  display: none !important;
+}
+
+
+.contentContainer::after {
+    display: none; /* Remove the gradient fade effect */
+}
+
+/* Activity blocks */
+.singleActivityBlock {
+    display: inline-block;
+    padding: 6px 12px;
+    margin: 3px;
+    color: #0d1117;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Activities container for forms */
+.activitiesContainer ul,
+.activitiesList {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+.activitiesContainer li,
+.activityListItem {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    background-color: #21262d;
+    border-radius: 8px;
+    border: 1px solid #30363d;
+    transition: all 0.3s ease;
+}
+
+.activityContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.activitiesContainer li:hover,
+.activityListItem:hover {
+    background-color: #30363d;
+    border-color: #58a6ff;
+}
+
+.activitiesContainer label {
+    flex: 1;
+    margin: 0 12px;
+    font-weight: 500;
+    color: #e6edf3;
+}
+
+.activitiesContainer input[type="checkbox"] {
+    margin: 0;
+    width: 18px;
+    height: 18px;
+    accent-color: #58a6ff;
+}
+
+/* Category section styles */
+.activityCategorySection {
+    margin-bottom: 25px;
+    border: 1px solid #30363d;
+    border-radius: 12px;
+    padding: 20px;
+    background-color: #161b22;
+}
+
+.activityCategoryHeader h3 {
+    margin: 0;
+    color: #f0f6fc;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.categoryButtonContainer {
+    display: flex;
+    gap: 8px;
+}
+
+.addActivityBtn {
+    background: linear-gradient(135deg, #238636 0%, #2ea043 100%);
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 0;
+    margin: 0;
+    border: none;
+}
+
+.deleteCategoryBtn {
+    background: linear-gradient(135deg, #da3633 0%, #f85149 100%);
+    font-size: 11px;
+    padding: 8px 12px;
+    margin: 0;
+    border: none;
+}
+
+.removeActivityBtn,
+.editActivityBtn
+{
+    background: linear-gradient(135deg, #da3633 0%, #f85149 100%);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    font-size: 14px;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.removeActivityBtn:hover {
+    background: linear-gradient(135deg, #f85149 0%, #da3633 100%);
+}
+
+.editActivityBtn {
+    background: linear-gradient(135deg, #2ea043 0%, #238636 100%);
+    width: 48px;
+    border-radius: 15%;
+}
+
+/* Management tools */
+.managementTools {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 70px;
+    position: fixed;
+    bottom: 0;
+    z-index: 4;
+    background: rgba(13, 17, 23, 0.95);
+    border-top: 1px solid #30363d;
+    gap: 15px;
+    padding: 0 30px;
+    box-sizing: border-box;
+    backdrop-filter: blur(10px);
+}
+
+.managementTools button {
+    height: 45px;
+    min-width: 100px;
+    border-radius: 25px;
+    font-weight: 600;
+}
+
+#addEntryButton {
+    background: linear-gradient(135deg, #238636 0%, #2ea043 100%);
+    font-size: 20px;
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    box-shadow: 0 4px 15px rgba(35, 134, 54, 0.4);
+}
+
+#editEntryButton {
+    background: linear-gradient(135deg, #d29922 0%, #bb8009 100%);
+    color: #ffffff;
+}
+
+#removeEntryButton {
+    background: linear-gradient(135deg, #da3633 0%, #f85149 100%);
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    font-size: 16px;
+}
+
+#addCategoryButton,
+#addMoodButton {
+    background: linear-gradient(135deg, #6f42c1 0%, #8b5cf6 100%);
+    font-size: 13px;
+    padding: 12px 20px;
+}
+
+/* Form layout improvements */
+.addActivityFormOverlay form > div,
+.addCategoryFormOverlay form > div,
+.editActivityFormOverlay form > div,
+.addMoodFormOverlay form > div,
+.editMoodFormOverlay form > div,
+.removeMoodFormOverlay form > div,
+.removeCategoryFormOverlay form > div {
+    margin-bottom: 20px;
+}
+
+.addActivityFormOverlay form > div[style*="flex"],
+.addCategoryFormOverlay form > div[style*="flex"],
+.editActivityFormOverlay form >div[style*="flex"],
+.addMoodFormOverlay form > div[style*="flex"],
+.editMoodFormOverlay form > div[style*="flex"],
+.removeMoodFormOverlay form > div[style*="flex"],
+.removeCategoryFormOverlay form > div[style*="flex"] {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.addActivityFormOverlay form > div[style*="flex"] label,
+.addCategoryFormOverlay form > div[style*="flex"] label,
+.addMoodFormOverlay form > div[style*="flex"] label,
+.editMoodFormOverlay form > div[style*="flex"] label,
+.removeMoodFormOverlay form > div[style*="flex"] label,
+.removeCategoryFormOverlay form > div[style*="flex"] label {
+    white-space: nowrap;
+    max-width: 140px;
+    font-weight: 600;
+    color: #f0f6fc;
+}
+
+/* Warning text styles */
+.removeCategoryFormOverlay form div[style*="color: red"] {
+    background-color: rgba(248, 81, 73, 0.1);
+    border: 1px solid rgba(248, 81, 73, 0.4);
+    border-radius: 6px;
+    padding: 10px;
+    margin: 15px 0;
+    font-size: 13px;
+    color: #ff7b72 !important;
+}
+
+/* CKEditor specific styles */
+#editor-container,
+#edit-editor-container {
+    margin: 20px 0;
+}
+
+#add-content-input,
+#edit-content-input {
+    min-height: 250px;
+    border-radius: 8px;
+    background-color: #0d1117;
+    color: #e6edf3;
+    border: 1px solid #30363d;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    max-height: none !important;
+    height: auto !important;
+}
+
+/* Responsive design */
+@media (max-width: 1200px) {
+    .pageContent {
+        margin-left: 5vw;
+        width: 90%;
+    }
+    
+    .pageContentList {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    .pageContent {
+        margin-left: 0;
+        width: 100%;
+        border-radius: 0;
+        border-left: none;
+    }
+    
+    .pageContentList {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .activitiesContainer ul,
+    .activitiesList {
+        grid-template-columns: 1fr;
+    }
+    
+    .addEntryFormOverlay form,
+    .editEntryFormOverlay form {
+        width: 95%;
+        height: 90%;
+        margin: 20px;
+    }
+    
+    .managementTools {
+        flex-wrap: wrap;
+        height: auto;
+        padding: 15px;
+        gap: 10px;
+    }
+    
+    .managementTools button {
+        min-width: 80px;
+        font-size: 12px;
+    }
+    
+    .activityCategoryHeader {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 10px;
+    }
+    
+    .categoryButtonContainer {
+        width: 100%;
+        justify-content: space-between;
+    }
+}
+
+/* Scrollbar styling */
+.pageContent::-webkit-scrollbar {
+    width: 8px;
+}
+
+.pageContent::-webkit-scrollbar-track {
+    background: #161b22;
+    border-radius: 4px;
+}
+
+.pageContent::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #58a6ff 0%, #79c0ff 100%);
+    border-radius: 4px;
+}
+
+.pageContent::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #388bfd 0%, #58a6ff 100%);
+}
+
+/* Loading animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.postContainer {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Form validation styles */
+input:invalid {
+    border-color: #f85149 !important;
+}
+
+input:valid {
+    border-color: #2ea043 !important;
+}
+
+/* Focus visible for accessibility */
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 2px solid #58a6ff;
+    outline-offset: 2px;
+}

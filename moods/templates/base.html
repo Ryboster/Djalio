@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<head>
+    {% load static %}
+    {{ allEntries|json_script:"allEntries"}}
+    {{ registry|json_script:"registry"}}
+
+    {% block head %}
+    {% endblock head %}
+    <script src="{% static 'moods/js/populate_navbar.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'moods/styles/diaries.css' %}">
+</head>
+
+<body>
+    {% block body_precontent %}
+    {% endblock body_precontent %}
+
+    <div id="background" class="background">
+        <div id="navbar" class="navbar" style="display: flex; flex-direction: column;"> 
+          {% block navbar %}
+          {% endblock navbar %}
+        </div> 
+        <div id="pageContent" class="pageContent">
+            {% block pageContent %}
+            {% endblock pageContent %}
+            <ul id="pageContentList" class="pageContentList">
+            </ul>
+        </div>
+        <div id="filler" class="filler" style="display: flex; flex-direction: column;"> 
+        </div>
+    </div>
+    
+    {% block body_postcontent %}
+    {% endblock body_postcontent %}
+
+    <style>
+         /* Style the button that is used to open and close the collapsible content */
+        .collapsible {
+          background-color: #eee;
+          color: #444;
+          cursor: pointer;
+          padding: 18px;
+          border: none;
+          text-align: left;
+          outline: none;
+          font-size: 15px;
+        }
+
+        .active, .collapsible:hover {
+          background-color: #ccc;
+        }
+
+        .content {
+          padding: 0 18px;
+          display: none;
+          overflow: hidden;
+          background-color: #f1f1f1;
+        } 
+    </style>
+</body>
+
+<footer>
+    {% block footer %}
+    {% endblock footer %}
+</footer>
+
+
+</html>

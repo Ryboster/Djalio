@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block navbar %}
+<button onclick = "window.location.href = '/';"> 
+    Home 
+</button>
+
+{% endblock navbar %}
+
+{% block head %}
+    {{ allEntries|json_script:"allEntries"}}
+    
+    <link rel="stylesheet" href="{% static 'moods/styles/diaries.css' %}">
+    <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+    
+{% endblock head %}
+
+{% block pageContent %}
+
+<div style="display:flex; flex-direction: column; justify-content: center; align-items:center;">
+    <form style="display:flex; flex-direction: column; width:75%;" method="POST" action="/create_new/">
+        {% csrf_token %}
+        <div style="display: flex; flex-direction:row; justify-content: center; align-items: center">
+            <h1> Create new log </h3>
+        </div>
+        <hr style="width:100%">
+        <div style="display: flex; flex-direction:row; justify-content: space-between;">
+            <label> Filename: </label>
+            <input type="text" name="filename" pattern="[A-Za-z0-9]+" id="filenameInputField" maxlength="20" required>
+        </div>
+        <hr style="width:50%; margin-right: auto;">
+        <div style="display: flex; flex-direction:row; justify-content: space-between;">
+            <label> Name: </label>
+            <input type="text" name="name" id="nameInputField" maxlength="50" required>
+        </div>
+        <hr style="width:50%">
+        <div style="display: flex; flex-direction:row; justify-content: space-between;">
+            <label> Template type: </label>
+            <select name="template" value="Diary">
+                <option value="Diary"> Diary </option>
+                <option value="Events"> Events </option>
+                <option value="Diet"> Diet </option>
+            </select>
+        </div>
+        <button type="submit">
+            Submit
+        </button>
+    </form>
+</div>
+{% endblock pageContent %}

@@ -17,27 +17,47 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from moods import views
+from Controllers.Diaries import Diary
+from moods import media_manager as MediaManager
+from django.conf import settings
+from django.conf.urls.static import static
+
+diary = Diary()
 
 urlpatterns = [
-    # Admin
-    path('admin/', admin.site.urls),
     
-    # Main page
-    path('', views.home, name='home'),
+    path('upload-media/', MediaManager.UploadMedia, name='upload_media'),
     
-    # Entry management
-    path('add_new_entry/', views.addNewEntry, name='addNewEntry'),
-    path('edit_existing_entry/', views.editExistingEntry, name='editExistingEntry'),
-    path('remove_existing_entry/', views.removeExistingEntry, name='removeExistingEntry'),
+    path("", views.home, name="home"),
     
-    # Activity management
-    path('add_new_activity/', views.addNewActivity, name='addNewActivity'),
-    path('remove_existing_activity/', views.removeExistingActivity, name='removeExistingActivity'),
+    path("create_new/", views.CreateNew, name="createNew"),
     
-    # Category management
-    path('add_new_category/', views.addNewCategory, name='addNewCategory'),
-    path('remove_existing_category/', views.removeExistingCategory, name='removeExistingCategory'),  # New URL
+    ### Main page
+    #path('', views.home, name='home'),    
+    ### DIARY section
+    path("Diary/<int:diary_id>/", diary.RenderDiary, name="ViewDiary"),
+    path("Diary/<int:diary_id>/remove", diary.RemoveDiary, name="RemoveDiary"),
     
-    # Mood management
-    path('add_new_mood/', views.addNewMood, name='addNewMood'),
+        ## Entry management
+    path('Diary/<int:diary_id>/add_new_entry/', diary.AddNewEntryToDiary, name='addNewEntry'),
+    path('Diary/<int:diary_id>/edit_existing_entry/', diary.editExistingEntry, name='editExistingEntry'),
+    path('Diary/<int:diary_id>/remove_existing_entry/', diary.removeExistingEntry, name='removeExistingEntry'),
+    
+        ## Activity management
+    path('Diary/<int:diary_id>/add_new_activity/', diary.addNewActivity, name='addNewActivity'),
+    path("Diary/<int:diary_id>/edit_activity/", diary.editActivity, name="editActivity"),
+    path('Diary/<int:diary_id>/remove_existing_activity/', diary.removeExistingActivity, name='removeExistingActivity'),
+    
+        ## Category management
+    path('Diary/<int:diary_id>/add_new_category/', diary.addNewCategory, name='addNewCategory'),
+    path('Diary/<int:diary_id>/edit_category/', diary.editCategory, name='editCategory'),
+    path('Diary/<int:diary_id>/remove_existing_category/', diary.removeExistingCategory, name='removeExistingCategory'),  # New URL
+    
+        ## Mood management    
+    path('Diary/<int:diary_id>/add_new_mood/', diary.addNewMoodToDiary, name='addNewMood'),
+    path('Diary/<int:diary_id>/edit_mood/', diary.EditMood, name='editMood'),
+    path('Diary/<int:diary_id>/remove_mood/', diary.RemoveMood, name='removeMood')
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

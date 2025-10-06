@@ -1,0 +1,268 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+    {{ allEntries|json_script:"allEntries"}}
+    {{ allMoods|json_script:"allMoods" }}
+    {{ allActivities|json_script:"allActivities" }}
+    {{ allCategories|json_script:"allCategories"}}
+    
+    <link rel="stylesheet" href="{% static 'moods/styles/diaries.css' %}">
+    <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+{% endblock head %}
+
+
+{% block body_precontent %}
+    <!-- ADD NEW LOG FORM -->
+    <div onclick="this.style.display = 'none'" id="addEntryFormOverlay" class="addEntryFormOverlay">
+        <form onclick="event.stopPropagation()" method="POST" id="addEntryForm" class="addEntryForm" action="add_new_entry/">
+            {% csrf_token %}
+            <input id="todayDate" type="date" name="date" hidden><br>
+            <label> Mood: </label>
+            <select id="moods" name="mood"></select><br>
+            <br>
+            <!-- WYSIWYG Editor Section -->
+            <div id="editor-container">
+                <label>Content:</label>
+                <textarea name="content" id="add-content-input" style="height: 300px; width: 100%;"></textarea>
+            </div>
+            <div id="activitiesContainer" class="activitiesContainer">
+            </div>
+            <button type="submit"> Submit </button>
+        </form>
+    </div>
+
+    <!-- EDIT CATEGORY FORM -->
+    <div onclick="this.style.display = 'none'" id="editCategoryFormOverlay" class="editCategoryFormOverlay">
+        <form onclick="event.stopPropagation()" method="POST" action="edit_category/" style="height:75%;">
+            {% csrf_token %}
+            <div style="display:flex; flex-direction:column; height:100%; justify-content: center;"> 
+                <div id="editCategoryFormHeader" style="display: flex; flex-direction: column;">
+                    <input id="categoryIDToEditInputField" name="categoryID" hidden>
+                    <Label> Category: </Label>
+                    <input id="categoryNameToEditInputField" readonly>
+                    <label> Will be changed to: </label>
+                    <input id="categoryNameToEditToInputField" name="newCategoryName">
+                </div>
+                <button type="submit"> Submit </button>
+            </div> <br>
+        </form>
+    </div>
+
+    <!-- EDIT ACTIVITY FORM -->
+    <div onclick="this.style.display = 'none'" id="editActivityFormOverlay" class="editActivityFormOverlay">
+        <form onclick="event.stopPropagation()" method="POST" action="edit_activity/" style="height:75%;">
+            {% csrf_token %}
+            <div style="display:flex; flex-direction:column;">
+                <div style="display:flex;">
+                    <input id="EditActivityIDInputField" name="ActivityID" hidden>
+                    <Label> Editing Activity : </Label>
+                    <input id="EditActivityNameDisplayInputField" value="" readonly>
+                </div>
+                <div style="display:flex;">
+                    <label> New name: </label>
+                    <input id="EditActivityNewNameInputField" type="text" name="newActivity">
+                </div>
+                <div style="display:flex;">
+                    <label> Color: </label>
+                    <input type="color" name="newColor" id="EditActivityColorInputField">
+                </div>
+                <div style="display:flex;">
+                    <label> Category: </label>
+                    <select id="EditActivityCategoryInputField" name="newCategoryID">
+                    </select>
+                </div>
+            </div>
+
+            <button type="submit"> OK </button>
+        </form>
+    </div>
+
+    <!-- ADD NEW CATEGORY FORM -->
+    <div onclick="this.style.display = 'none'" id="addCategoryFormOverlay" class="addCategoryFormOverlay">
+        <form onclick="event.stopPropagation()" method="POST" action="add_new_category/" style="height:75%;">
+            {% csrf_token %}
+            <div style="display:flex; flex-direction:column; height:100%; justify-content: center;"> 
+                <div style="display: flex; flex-direction: column; height:10%;">
+                    <label> Add new category: </label>
+                    <div style="display: flex; height:100%;">
+                        <input name="categoryName" required style="width:80%;"> 
+                        <button type="submit" style="width: 20%; text-align: center;"> OK </button>
+                    </div>
+            </div>
+                <label> Existing categories: </label>
+                <div id="existingCategoriesList" class="existingCategoriesList" style="height:70%; width:100%; overflow:scroll; background-color: rgba(19, 19, 19, 0.808);">
+                </div>
+            </div> <br>
+        </form>
+    </div>
+
+    <!-- ADD NEW ACTIVITY TO CATEGORY FORM -->
+    <div onclick="this.style.display = 'none'" id="addActivityFormOverlay" class="addActivityFormOverlay">
+        <form onclick="event.stopPropagation()" method="POST" action="add_new_activity/">
+            {% csrf_token %}
+            <div style="display:flex"> 
+                <label> Add new activity: </label>
+                <input name="newActivity" required> 
+            </div> <br>
+            <div style="display:flex">
+                <label> for category: </label>
+                <input id="activityCategoryInputField" name="activityCategory" readonly>
+            </div><br>
+            <div style="display:flex">
+                <label> Color: </label>
+                <input type="color" name="color" value="#FFD700">
+            </div><br>
+            <button type="submit"> OK </button>
+        </form>
+    </div>
+
+    <!-- REMOVE CATEGORY FORM -->
+    <div onclick="this.style.display = 'none'" id="removeCategoryFormOverlay" class="removeCategoryFormOverlay">
+        <form onclick="event.stopPropagation()" method="POST" action="remove_existing_category/">
+            {% csrf_token %}
+            <div style="display:flex"> 
+                <label> Remove category: </label>
+                <input name="categoryToRemoveDisplay" id="categoryToRemoveDisplayInputField" readonly>
+                <input name="categoryToRemove" id="categoryToRemoveInputField" hidden> 
+            </div> <br>
+            <div style="color: red; font-size: 12px; margin-bottom: 10px;">
+                Warning: This will also delete all activities in this category!
+            </div>
+            <button type="submit"> OK </button>
+        </form>
+    </div>
+
+    <!-- MOODS VIEW -->
+    <div onclick="this.style.display = 'none'" id="MoodsView" class="MoodsView" style="display: none;">
+        <div id="MoodsViewBackground" class="MoodsViewBackground" style="display: flex; flex-direction: column; justify-content: center;">
+            <ul id="MoodsViewMoodsList">
+            </ul>
+        </div>
+    </div>
+
+    <!-- ADD NEW MOOD FORM -->
+    <div onclick="this.style.display = 'none'" id="addMoodFormOverlay" class="addMoodFormOverlay">
+        <form onclick="event.stopPropagation()" method="POST" action="add_new_mood/">
+            {% csrf_token %}
+            <div style="display:flex"> 
+                <label> Mood name: </label>
+                <input name="mood" required> 
+            </div> <br>
+            <div style="display:flex">
+                <label> Score (1-10): </label>
+                <input type="number" name="score" min="1" max="10" required>
+            </div><br>
+            <div style="display:flex">
+                <label> Color: </label>
+                <input type="color" name="color" value="#FFD700">
+            </div><br>
+            <button type="submit"> OK </button>
+        </form>
+    </div>
+
+    <!-- EDIT MOOD FORM -->
+    <div onclick="this.style.display = 'none'" id="editMoodFormOverlay" class="editMoodFormOverlay">
+        <form onclick="event.stopPropagation()" method="POST" action="edit_mood/">
+            {% csrf_token %}
+            <div style="display: flex; flex-direction: row; justify-content: space-between;">
+                <label> Editing Mood: </label>
+                <input id="editMoodPreviewNameInputField" type="text" readonly> 
+                <input id="editMoodIDInputField" name="Mood_ID" type="text" hidden>
+            </div>
+            <div style="display: flex; flex-direction: row; justify-content: space-between;">
+                <label> New Name: </label>
+                <input id="editMoodNameInputField" name="newMood" type="text"> 
+            </div>
+            <div style="display: flex; flex-direction: row; justify-content: space-between;">
+                <label> New Score (1-10): </label>
+                <input id="editMoodScoreInputField" name="newScore" type="text" pattern="[1-10]"> 
+            </div>
+            <div style="display: flex; flex-direction: row; justify-content: space-between;">
+                <label> New Color: </label>
+                <input id="editMoodColorInputField" name="newColor" type="color">
+            </div>
+            <button type="submit" style="width=100%;"> Submit </button>
+        </form>
+    </div>
+
+    <!-- REMOVE MOOD FORM -->
+     <div onclick="this.style.display = 'none'" id="removeMoodFormOverlay" class="removeMoodFormOverlay">
+        <form onclick="event.stopPropagation()" method="POST" action="remove_mood/">
+            {% csrf_token %}
+            <div style="display:flex"> 
+                <label> Remove Mood: </label>
+                <input name="moodToRemoveDisplay" id="moodToRemoveDisplayInputField" readonly>
+                <input name="Mood_ID" id="moodToRemoveInputField" hidden> 
+            </div> <br>
+            <button type="submit"> OK </button>
+        </form>
+    </div>
+
+    <!-- REMOVE EXISTING ACTIVITY FROM CATEGORY FORM -->
+     <div onclick="this.style.display = 'none'" id="removeActivityFormOverlay" class="removeActivityFormOverlay">
+        <form onclick="event.stopPropagation()" method="POST" action="remove_existing_activity/">
+            {% csrf_token %}
+            <div style="display:flex"> 
+                <label> Remove activity: </label>
+                <input name="activityToRemove" id="activityToRemoveInputField" hidden> 
+                <input id="activityToRemoveInputFieldDisplay" readonly>
+            </div> <br>
+            <div style="display:flex">
+                <label> from category: </label>
+                <input id="activityCategoryInputFieldR" name="activityCategory" hidden>
+                <input id="activityCategoryInputFieldRDisplay" readonly>
+            </div><br>
+            <button type="submit"> OK </button>
+        </form>
+    </div>
+
+    <!-- REMOVE EXISTING ENTRY FORM -->
+     <div onclick="this.style.display = 'none'" id="removeEntryFormOverlay" class="removeEntryFormOverlay">
+        <form onclick="event.stopPropagation()" method="POST" action="remove_existing_entry/">
+            {% csrf_token %}
+            <div style="display:flex"> 
+                <label> Remove entry: </label>
+                <input name="entryToRemove" id="entryToRemoveInputField" readonly> 
+            </div> <br>
+            <button type="submit"> OK </button>
+        </form>
+    </div>
+
+    <!-- EDIT EXISTING ENTRY FORM -->
+    <div onclick="this.style.display='none'" id="editEntryFormOverlay" class="editEntryFormOverlay">
+        <form onclick="event.stopPropagation()" method="POST" id="editEntryForm" class="editEntryForm" action="edit_existing_entry/">
+            {% csrf_token %}
+            <label> ID: </label>
+            <input id="entryIDEditFormInputField" name="entryID" readonly><br>
+            <label> Mood: </label>
+            <select id="moodsEditFormInputField" name="mood"></select><br>
+            <br>
+            <!-- WYSIWYG Editor Section -->
+            <div id="edit-editor-container">
+                <label>Content:</label>
+                <textarea name="content" id="edit-content-input" style="height: 300px; width: 100%;"></textarea>
+            </div>
+            <div id="editFormActivitiesContainer" class="activitiesContainer">
+            </div>
+            <button type="submit"> Submit </button>
+        </form>
+    </div>
+{% endblock body_precontent %}
+
+{% block body_postcontent %}
+    <div id="managementTools" class="managementTools">
+        <button id="addEntryButton" onclick="showAddEntryForm()">+</button>
+        <button id="editEntryButton" onclick="if (selected) {showEditEntryForm(); populateEditEntryForm(selected)}"> Edit </button>
+        <button id="removeEntryButton" onclick="if (selected) {document.getElementById('entryToRemoveInputField').value = selected.getAttribute('dbid');document.getElementById('removeEntryFormOverlay').style.display = 'flex';}">X</button>
+        <button id="addCategoryButton" onclick="toggleAddCategoryForm();">Categories</button>
+        <button id="addMoodButton" onclick="toggleMoodsView();">Add Mood</button>
+    </div>
+{% endblock body_postcontent %}
+
+
+{% block footer %}
+    <script src="{% static 'moods/js/diaries.js' %}"></script>
+    <script src="{% static 'moods/js/diaries_ckeditor.js' %}"></script>
+{% endblock footer %}
